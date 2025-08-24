@@ -17,11 +17,12 @@ const something = ["mp3", "mp4", "jpg", "png", "webp", "webm", "wav", "gif", "mk
       <!-- UPLOAD AREA -->
       <div id="drop_area" class="hover:scale-110 cursor-pointer duration-500 ease-out border-dashed border-2 border-primary rounded-4xl w-90 h-60 bg-primary-transparent flex justify-center items-center">
         <p class="text-primary">
-          Click here to upload a file
+          Drag and drop a file or click to upload
         </p>
+        <input type="file" class="hidden" id="file_input" multiple=false />
       </div>
 
-      <p id="file_name" class="hidden">
+      <p id="file_name" class="hidden w-90 text-center">
       </p>
       <!-- SUBMIT BUTTON -->
       <Button>Submit</Button>
@@ -34,7 +35,9 @@ const something = ["mp3", "mp4", "jpg", "png", "webp", "webm", "wav", "gif", "mk
         )}
       </Select>
       <ion-icon name="chevron-forward-outline" class="text-5xl" />
-      <ion-icon name="download-outline" class="text-9xl text-font-secondary" />
+      <div class="w-90 flex justify-center items-center hover:scale-110 cursor-pointer duration-500 ease-out border-dashed border-2 border-primary rounded-4xl bg-primary-transparent h-60">
+        <ion-icon name="download-outline" class="text-9xl text-font-secondary pb-6" />
+      </div>
     </div>
   </section>
 </Layout>
@@ -48,19 +51,49 @@ const something = ["mp3", "mp4", "jpg", "png", "webp", "webm", "wav", "gif", "mk
 <script>
   const dropArea = document.getElementById("drop_area");
   const fileNameParagraph = document.getElementById("file_name");
+  const fileInput: HTMLInputElement | null = document.getElementById("file_input") as HTMLInputElement | null;
 
-  function dropHandler(event: DragEvent) {
+  if(dropArea) {
+    dropArea.ondragover = dropArea.ondragenter = function(event) {
+      event.preventDefault();
+    }
+  }
+
+  function onFileUpload(file: File | null) {
+    if (dropArea && fileNameParagraph && fileInput && file){
+      dropArea.classList.toggle("hidden");
+      fileNameParagraph.classList.toggle("hidden");
+      fileNameParagraph.innerText = file.name;
+    }
+  }
+
+  function dropAreaDropHandler(event: DragEvent) {
     event.preventDefault();
+    console.log("something happened")
 
-    if (event.dataTransfer?.items && event.dataTransfer.items.length !== 0 && dropArea && fileNameParagraph) {
+    if (event.dataTransfer?.items && event.dataTransfer.items.length !== 0) {
       const file = event.dataTransfer.items[0].getAsFile();
-      if (file?.name) {
-        dropArea.classList.toggle("hidden");
-        fileNameParagraph.classList.toggle("hidden");
-        fileNameParagraph.innerText = file?.name;
+      onFileUpload(file);
+
+      // this is weird but it doesn't work othewise trust me bro
+      if (file && fileInput) {
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        fileInput.files = dataTransfer.files;
       }
     }
   }
 
-  dropArea?.addEventListener("drop", dropHandler);
+  function dropAreaClickHandler(_event: MouseEvent) {
+    fileInput?.dispatchEvent(new MouseEvent("click"));
+  }
+
+  function fileInputChangeHandler(_event: Event) {
+    console.log(fileInput?.files?.[0])
+    onFileUpload(fileInput?.files?.[0] ?? null);
+  }
+
+  dropArea?.addEventListener("drop", dropAreaDropHandler);
+  dropArea?.addEventListener("click", dropAreaClickHandler);
+  fileInput?.addEventListener("change", fileInputChangeHandler);
 </script>
