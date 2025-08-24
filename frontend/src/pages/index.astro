@@ -1,12 +1,16 @@
 ---
 import "../styles/global.css";
 import Layout from "../layouts/Layout.astro";
-import RightArrow from "../components/RightArrow.astro";
 import Button from "../components/Button.astro";
 import Select from "../components/Select.astro";
 import Option from "../components/Option.astro";
 
-const something = ["mp3", "mp4", "jpg", "png", "webp", "webm", "wav", "gif", "mkv", "mov", "avi", "wmv", "aac", "opus", "wma", "bmp", "tiff"];
+type KeyLabelPair = {
+  key: string,
+  label: string,
+}
+
+const fileExtensions: KeyLabelPair[] = [{ key: "", label: "-- Select --" }, { key: "mp3", label: "mp3" }, { key: "mp4", label: "mp4" }, { key: "jpg", label: "jpg" }, { key: "png", label: "png" }, { key: "webp", label: "webp" }, { key: "webm", label: "webm" }, { key: "wav", label: "wav" }, { key: "gif", label: "gif" }, { key: "mkv", label: "mkv" }, { key: "mov", label: "mov" }, { key: "avi", label: "avi" }, { key: "wmv", label: "wmv" }, { key: "aac", label: "aac" }, { key: "opus", label: "opus" }, { key: "wma", label: "wma" }, { key: "bmp", label: "bmp" }, { key: "tiff", label: "tiff" }]
 ---
 
 <Layout>
@@ -43,8 +47,8 @@ const something = ["mp3", "mp4", "jpg", "png", "webp", "webm", "wav", "gif", "mk
       <!-- TARGET FILETYPE -->
       <div id="extension-select-container" class="low-opacity">
         <Select disabled id="extension-select" label="Target filetype">
-          {something.map((elem) => 
-            <Option value={elem}>{elem}</Option>
+          {fileExtensions.map((fileExtension) => 
+            <Option value={fileExtension.key}>{fileExtension.label}</Option>
           )}
         </Select>
       </div>
@@ -54,7 +58,7 @@ const something = ["mp3", "mp4", "jpg", "png", "webp", "webm", "wav", "gif", "mk
       <ion-icon name="chevron-down-outline" class="text-5xl md:hidden" />
 
       <!-- CONVERTED FILE -->
-      <div class="aspect-video w-52 sm:w-68 px-8 md:w-50 lg:w-70 xl:w-90 lg:px-10 flex justify-center items-center hover:scale-110 cursor-pointer duration-500 ease-out border-dashed border-2 border-primary rounded-4xl bg-primary-transparent">
+      <div id="converted-file-area" class="aspect-video low-opacity w-52 sm:w-68 px-8 md:w-50 lg:w-70 xl:w-90 lg:px-10 flex justify-center items-center hover:scale-110 cursor-pointer duration-500 ease-out border-dashed border-2 border-primary rounded-4xl bg-primary-transparent">
         <ion-icon name="download-outline" class="text-6xl pb-2 sm:text-7xl md:text-6xl md:pb-3 lg:text-7xl lg:pb-4 xl:text-8xl xl:bg-6 text-font-secondary" />
       </div>
     </div>
@@ -86,6 +90,8 @@ const something = ["mp3", "mp4", "jpg", "png", "webp", "webm", "wav", "gif", "mk
     document.getElementById("extension-select") as HTMLSelectElement | null;
   const extensionSelectContainer: HTMLDivElement | null =
     document.getElementById("extension-select-container") as HTMLDivElement | null;
+  const convertedFileArea: HTMLDivElement | null =
+    document.getElementById("converted-file-area") as HTMLDivElement | null;
 
 
   if(dropArea) {
@@ -137,7 +143,12 @@ const something = ["mp3", "mp4", "jpg", "png", "webp", "webm", "wav", "gif", "mk
     onFileUpload(fileInput?.files?.[0] ?? null);
   }
 
+  function extensionChangeHandler(_event: Event) {
+    convertedFileArea?.classList.remove("low-opacity");
+  }
+
   dropArea?.addEventListener("drop", dropAreaDropHandler);
   dropArea?.addEventListener("click", dropAreaClickHandler);
   fileInput?.addEventListener("change", fileInputChangeHandler);
+  extensionSelect?.addEventListener("change", extensionChangeHandler);
 </script>

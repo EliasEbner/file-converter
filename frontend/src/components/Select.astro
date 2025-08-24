@@ -1,4 +1,5 @@
 ---
+import Option from "./Option.astro";
 const { id, label, placeholder, disabled } = Astro.props;
 ---
 
@@ -15,8 +16,8 @@ const { id, label, placeholder, disabled } = Astro.props;
     border: none;
   }
   .custom-select:open::picker(select) {
-    margin: 0, 0.25rem;
-    padding: 0, 0.25rem;
+    margin: 0 0.25rem;
+    padding: 0 0.25rem;
     background-color: var(--color-font-light);
   }
   .custom-select::picker-icon {
