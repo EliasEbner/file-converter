@@ -12,22 +12,31 @@ const something = ["mp3", "mp4", "jpg", "png", "webp", "webm", "wav", "gif", "mk
 <Layout>
   <section class="w-full h-full flex justify-center items-center">
     <div class="flex flex-col md:flex-row gap-8 sm:gap-10 md:gap-6 lg:gap-8 xl:gap-12 2xl:gap-16 items-center">
+
       <!-- FILE UPLOAD -->
       <div class="flex flex-col items-center gap-4 pt-14">
+
       <!-- UPLOAD AREA -->
       <div id="drop_area" class="hover:scale-110 aspect-video w-52 sm:w-68 px-8 md:w-50 lg:w-70 xl:w-90 lg:px-10 cursor-pointer duration-500 ease-out border-dashed border-2 border-primary rounded-4xl bg-primary-transparent flex justify-center items-center">
         <p class="text-primary text-center">
           Drag and drop a file or click to upload
         </p>
+
+        <!-- HIDDEN INPUT FOR FILE -->
         <input type="file" class="hidden" id="file_input" multiple=false />
       </div>
 
+
+      <!-- FILENAME ONCE UPLOADED -->
       <p id="file_name" class="hidden w-90 text-center">
       </p>
+
       <!-- SUBMIT BUTTON -->
       <Button>Submit</Button>
       </div>
 
+
+      <!-- CHEVRON -->
       <ion-icon name="chevron-forward-outline" class="text-5xl hidden md:block" />
       <ion-icon name="chevron-down-outline" class="text-5xl md:hidden" />
 
@@ -38,6 +47,7 @@ const something = ["mp3", "mp4", "jpg", "png", "webp", "webm", "wav", "gif", "mk
         )}
       </Select>
 
+      <!-- CHEVRON -->
       <ion-icon name="chevron-forward-outline" class="text-5xl hidden md:block" />
       <ion-icon name="chevron-down-outline" class="text-5xl md:hidden" />
 
@@ -61,11 +71,14 @@ const something = ["mp3", "mp4", "jpg", "png", "webp", "webm", "wav", "gif", "mk
   const fileInput: HTMLInputElement | null = document.getElementById("file_input") as HTMLInputElement | null;
 
   if(dropArea) {
+    // needed to make drag and drop work
     dropArea.ondragover = dropArea.ondragenter = function(event) {
       event.preventDefault();
     }
   }
 
+  // triggered regardless of whether file is uploaded through
+  // drag and drop or click to upload
   function onFileUpload(file: File | null) {
     if (dropArea && fileNameParagraph && fileInput && file){
       dropArea.classList.toggle("hidden");
@@ -74,6 +87,7 @@ const something = ["mp3", "mp4", "jpg", "png", "webp", "webm", "wav", "gif", "mk
     }
   }
 
+  // only on drag and drop upload
   function dropAreaDropHandler(event: DragEvent) {
     event.preventDefault();
     console.log("something happened")
@@ -91,12 +105,15 @@ const something = ["mp3", "mp4", "jpg", "png", "webp", "webm", "wav", "gif", "mk
     }
   }
 
+  // only on click to upload
   function dropAreaClickHandler(_event: MouseEvent) {
+    // manually trigger click event on hidden <input type="file" />
     fileInput?.dispatchEvent(new MouseEvent("click"));
   }
 
+  // for upload with click: once uploaded change
+  // the contents of the filename element
   function fileInputChangeHandler(_event: Event) {
-    console.log(fileInput?.files?.[0])
     onFileUpload(fileInput?.files?.[0] ?? null);
   }
 
