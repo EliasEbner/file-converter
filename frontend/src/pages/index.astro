@@ -1,0 +1,66 @@
+---
+import "../styles/global.css";
+import Layout from "../layouts/Layout.astro";
+import RightArrow from "../components/RightArrow.astro";
+import Button from "../components/Button.astro";
+import Select from "../components/Select.astro";
+import Option from "../components/Option.astro";
+
+const something = ["mp3", "mp4", "jpg", "png", "webp", "webm", "wav", "gif", "mkv", "mov", "avi", "wmv", "aac", "opus", "wma", "bmp", "tiff"];
+---
+
+<Layout>
+  <section class="w-full h-full flex justify-center items-center">
+    <div class="flex flex-row gap-16 items-center">
+      <!-- FILE UPLOAD -->
+      <div class="flex flex-col items-center gap-4 pt-14">
+      <!-- UPLOAD AREA -->
+      <div id="drop_area" class="hover:scale-110 cursor-pointer duration-500 ease-out border-dashed border-2 border-primary rounded-4xl w-90 h-60 bg-primary-transparent flex justify-center items-center">
+        <p class="text-primary">
+          Click here to upload a file
+        </p>
+      </div>
+
+      <p id="file_name" class="hidden">
+      </p>
+      <!-- SUBMIT BUTTON -->
+      <Button>Submit</Button>
+      </div>
+      <ion-icon name="chevron-forward-outline" class="text-5xl" />
+      <!-- TARGET FILETYPE -->
+      <Select label="Target filetype:">
+        {something.map((elem) => 
+          <Option value={elem}>{elem}</Option>
+        )}
+      </Select>
+      <ion-icon name="chevron-forward-outline" class="text-5xl" />
+      <ion-icon name="download-outline" class="text-9xl text-font-secondary" />
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .hidden {
+    display: hidden;
+  }
+</style>
+
+<script>
+  const dropArea = document.getElementById("drop_area");
+  const fileNameParagraph = document.getElementById("file_name");
+
+  function dropHandler(event: DragEvent) {
+    event.preventDefault();
+
+    if (event.dataTransfer?.items && event.dataTransfer.items.length !== 0 && dropArea && fileNameParagraph) {
+      const file = event.dataTransfer.items[0].getAsFile();
+      if (file?.name) {
+        dropArea.classList.toggle("hidden");
+        fileNameParagraph.classList.toggle("hidden");
+        fileNameParagraph.innerText = file?.name;
+      }
+    }
+  }
+
+  dropArea?.addEventListener("drop", dropHandler);
+</script>

@@ -1,0 +1,25 @@
+---
+const { id, label, placeholder } = Astro.props;
+---
+
+<div class="relative">
+  <label class="absolute -top-6" for={id}>{label}</label>
+  <select id={id} class="w-60 px-4 h-10 flex justify-center rounded-4xl items-center focus:outline-none bg-neutral cursor-pointer custom-select">
+    <slot />
+  </select>
+</div>
+<style>
+  .custom-select,
+  .custom-select::picker(select) {
+    appearance: base-select;
+    border: none;
+  }
+  .custom-select:open::picker(select) {
+    margin: 0, 0.25rem;
+    padding: 0, 0.25rem;
+    background-color: var(--color-font-light);
+  }
+  .custom-select::picker-icon {
+    padding-right: 0.25rem;
+  }
+</style>

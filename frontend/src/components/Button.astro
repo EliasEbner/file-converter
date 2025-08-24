@@ -1,0 +1,7 @@
+---
+const { onclick } = Astro.params;
+---
+
+<button class="focus:outline-none bg-primary hover:scale-110 active:scale-95 duration-200 ease-in-out rounded-4xl px-8 h-10 text-font-light cursor-pointer text-lg font-bold" onclick={onclick}>
+  <slot />
+</button>
