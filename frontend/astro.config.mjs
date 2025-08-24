@@ -8,6 +8,12 @@ import icon from "astro-icon";
 export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
+    optimizeDeps: {
+      exclude: [
+        '@ffmpeg/ffmpeg',
+        '@ffmpeg/util'
+      ]
+    }
   },
 
   integrations: [icon()],

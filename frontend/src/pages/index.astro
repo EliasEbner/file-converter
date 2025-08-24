@@ -1,65 +1,99 @@
 ---
 import "../styles/global.css";
 import Layout from "../layouts/Layout.astro";
-import Button from "../components/Button.astro";
+// import Button from "../components/Button.astro"; // document.getElementById doesn't work idk
 import Select from "../components/Select.astro";
 import Option from "../components/Option.astro";
 
 type KeyLabelPair = {
-  key: string,
-  label: string,
-}
+  key: string;
+  label: string;
+};
 
-const fileExtensions: KeyLabelPair[] = [{ key: "", label: "-- Select --" }, { key: "mp3", label: "mp3" }, { key: "mp4", label: "mp4" }, { key: "jpg", label: "jpg" }, { key: "png", label: "png" }, { key: "webp", label: "webp" }, { key: "webm", label: "webm" }, { key: "wav", label: "wav" }, { key: "gif", label: "gif" }, { key: "mkv", label: "mkv" }, { key: "mov", label: "mov" }, { key: "avi", label: "avi" }, { key: "wmv", label: "wmv" }, { key: "aac", label: "aac" }, { key: "opus", label: "opus" }, { key: "wma", label: "wma" }, { key: "bmp", label: "bmp" }, { key: "tiff", label: "tiff" }]
+const fileExtensions: KeyLabelPair[] = [
+  { key: "", label: "-- Select --" },
+  { key: "mp3", label: "mp3" },
+  { key: "mp4", label: "mp4" },
+  { key: "jpg", label: "jpg" },
+  { key: "png", label: "png" },
+  { key: "webp", label: "webp" },
+  { key: "webm", label: "webm" },
+  { key: "wav", label: "wav" },
+  { key: "gif", label: "gif" },
+  { key: "mkv", label: "mkv" },
+  { key: "mov", label: "mov" },
+  { key: "avi", label: "avi" },
+  { key: "wmv", label: "wmv" },
+  { key: "aac", label: "aac" },
+  { key: "opus", label: "opus" },
+  { key: "wma", label: "wma" },
+  { key: "bmp", label: "bmp" },
+  { key: "tiff", label: "tiff" },
+];
 ---
 
 <Layout>
   <section class="w-full h-full flex justify-center items-center">
-    <div class="flex flex-col md:flex-row gap-8 sm:gap-10 md:gap-6 lg:gap-8 xl:gap-12 2xl:gap-16 items-center">
-
+    <div
+      class="flex flex-col md:flex-row gap-8 sm:gap-10 md:gap-6 lg:gap-8 xl:gap-12 2xl:gap-16 items-center"
+    >
       <!-- FILE UPLOAD -->
-      <div class="flex flex-col items-center gap-4 pt-14">
-
+      <div class="flex flex-col items-center gap-4">
         <!-- UPLOAD AREA -->
-        <div id="drop-area" class="hover:scale-110 aspect-video w-52 sm:w-68 px-8 md:w-50 lg:w-70 xl:w-90 lg:px-10 cursor-pointer duration-500 ease-out border-dashed border-2 border-primary rounded-4xl bg-primary-transparent flex justify-center items-center">
+        <div
+          id="drop-area"
+          class="hover:scale-110 aspect-video w-52 sm:w-68 px-8 md:w-50 lg:w-70 xl:w-90 lg:px-10 cursor-pointer duration-500 ease-out border-dashed border-2 border-primary rounded-4xl bg-primary-transparent flex justify-center items-center"
+        >
           <p class="text-primary text-center">
             Drag and drop a file or click to upload
           </p>
 
           <!-- HIDDEN INPUT FOR FILE -->
-          <input type="file" class="hidden" id="file-input" multiple=false />
+          <input type="file" class="hidden" id="file-input" multiple="false" />
         </div>
 
-
         <!-- FILENAME ONCE UPLOADED -->
-        <p id="file-name" class="hidden w-90 text-center">
-        </p>
-
-        <!-- SUBMIT BUTTON -->
-        <Button>Submit</Button>
+        <p id="file-name" class="hidden w-90 text-center"></p>
       </div>
 
-
       <!-- CHEVRON -->
-      <ion-icon name="chevron-forward-outline" class="text-5xl hidden md:block" />
-      <ion-icon name="chevron-down-outline" class="text-5xl md:hidden" />
+      <ion-icon name="chevron-forward-outline" class="text-5xl hidden md:block"
+      ></ion-icon>
+      <ion-icon name="chevron-down-outline" class="text-5xl md:hidden"
+      ></ion-icon>
 
       <!-- TARGET FILETYPE -->
-      <div id="extension-select-container" class="low-opacity">
+      <div
+        id="extension-select-container"
+        class="low-opacity flex flex-col items-center gap-4"
+      >
         <Select disabled id="extension-select" label="Target filetype">
-          {fileExtensions.map((fileExtension) => 
-            <Option value={fileExtension.key}>{fileExtension.label}</Option>
-          )}
+          {
+            fileExtensions.map((fileExtension) => (
+              <Option value={fileExtension.key}>{fileExtension.label}</Option>
+            ))
+          }
         </Select>
+
+        <!-- CONVERT BUTTON -->
+        <button id="convert-button">Convert</button>
       </div>
 
       <!-- CHEVRON -->
-      <ion-icon name="chevron-forward-outline" class="text-5xl hidden md:block" />
-      <ion-icon name="chevron-down-outline" class="text-5xl md:hidden" />
+      <ion-icon name="chevron-forward-outline" class="text-5xl hidden md:block"
+      ></ion-icon>
+      <ion-icon name="chevron-down-outline" class="text-5xl md:hidden"
+      ></ion-icon>
 
       <!-- CONVERTED FILE -->
-      <div id="converted-file-area" class="aspect-video low-opacity w-52 sm:w-68 px-8 md:w-50 lg:w-70 xl:w-90 lg:px-10 flex justify-center items-center hover:scale-110 cursor-pointer duration-500 ease-out border-dashed border-2 border-primary rounded-4xl bg-primary-transparent">
-        <ion-icon name="download-outline" class="text-6xl pb-2 sm:text-7xl md:text-6xl md:pb-3 lg:text-7xl lg:pb-4 xl:text-8xl xl:bg-6 text-font-secondary" />
+      <div
+        id="converted-file-area"
+        class="aspect-video low-opacity w-52 sm:w-68 px-8 md:w-50 lg:w-70 xl:w-90 lg:px-10 flex justify-center items-center hover:scale-110 cursor-pointer duration-500 ease-out border-dashed border-2 border-primary rounded-4xl bg-primary-transparent"
+      >
+        <ion-icon
+          name="download-outline"
+          class="text-6xl pb-2 sm:text-7xl md:text-6xl md:pb-3 lg:text-7xl lg:pb-4 xl:text-8xl xl:bg-6 text-font-secondary"
+        ></ion-icon>
       </div>
     </div>
   </section>
@@ -80,43 +114,58 @@ const fileExtensions: KeyLabelPair[] = [{ key: "", label: "-- Select --" }, { ke
 <!-- SCRIPT --------------------------------------------------------------------------------------->
 
 <script>
-  const dropArea: HTMLDivElement | null =
-    document.getElementById("drop-area") as HTMLDivElement | null;
+  const dropArea: HTMLDivElement | null = document.getElementById(
+    "drop-area",
+  ) as HTMLDivElement | null;
   const fileNameParagraph: HTMLParagraphElement | null =
     document.getElementById("file-name") as HTMLParagraphElement | null;
-  const fileInput: HTMLInputElement | null =
-    document.getElementById("file-input") as HTMLInputElement | null;
-  const extensionSelect: HTMLSelectElement | null =
-    document.getElementById("extension-select") as HTMLSelectElement | null;
+  const fileInput: HTMLInputElement | null = document.getElementById(
+    "file-input",
+  ) as HTMLInputElement | null;
+  const extensionSelect: HTMLSelectElement | null = document.getElementById(
+    "extension-select",
+  ) as HTMLSelectElement | null;
   const extensionSelectContainer: HTMLDivElement | null =
-    document.getElementById("extension-select-container") as HTMLDivElement | null;
-  const convertedFileArea: HTMLDivElement | null =
-    document.getElementById("converted-file-area") as HTMLDivElement | null;
+    document.getElementById(
+      "extension-select-container",
+    ) as HTMLDivElement | null;
+  const convertedFileArea: HTMLDivElement | null = document.getElementById(
+    "converted-file-area",
+  ) as HTMLDivElement | null;
+  const convertButton: HTMLButtonElement | null = document.getElementById(
+    "convert-button",
+  ) as HTMLButtonElement | null;
 
-
-  if(dropArea) {
+  if (dropArea) {
     // needed to make drag and drop work
-    dropArea.ondragover = dropArea.ondragenter = function(event) {
+    dropArea.ondragover = dropArea.ondragenter = function (event) {
       event.preventDefault();
-    }
+    };
   }
 
   // triggered regardless of whether file is uploaded through
   // drag and drop or click to upload
   function onFileUpload(file: File | null) {
-    if (dropArea && fileNameParagraph && extensionSelectContainer && extensionSelect && fileInput && file){
+    if (
+      dropArea &&
+      fileNameParagraph &&
+      extensionSelectContainer &&
+      extensionSelect &&
+      fileInput &&
+      file
+    ) {
       dropArea.classList.add("hidden");
       fileNameParagraph.classList.remove("hidden");
       fileNameParagraph.innerText = file.name;
       extensionSelect.disabled = false;
-      extensionSelectContainer.classList.remove("low-opacity")
+      extensionSelectContainer.classList.remove("low-opacity");
     }
   }
 
   // only on drag and drop upload
   function dropAreaDropHandler(event: DragEvent) {
     event.preventDefault();
-    console.log("something happened")
+    console.log("something happened");
 
     if (event.dataTransfer?.items && event.dataTransfer.items.length !== 0) {
       const file = event.dataTransfer.items[0].getAsFile();
@@ -151,4 +200,81 @@ const fileExtensions: KeyLabelPair[] = [{ key: "", label: "-- Select --" }, { ke
   dropArea?.addEventListener("click", dropAreaClickHandler);
   fileInput?.addEventListener("change", fileInputChangeHandler);
   extensionSelect?.addEventListener("change", extensionChangeHandler);
+
+  import { FFmpeg } from "@ffmpeg/ffmpeg";
+  import { fetchFile, toBlobURL } from "@ffmpeg/util";
+
+  let ffmpeg: FFmpeg | null = null;
+
+  async function getFFmpeg() {
+    console.log("Getting FFmpeg instance");
+    if (ffmpeg) {
+      return ffmpeg;
+    }
+    console.log("Loading ffmpeg-core.js");
+
+    ffmpeg = new FFmpeg();
+    if (!ffmpeg.loaded) {
+      try {
+        const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm";
+        await ffmpeg.load({
+          coreURL: await toBlobURL(
+            `${baseURL}/ffmpeg-core.js`,
+            "text/javascript",
+          ),
+          wasmURL: await toBlobURL(
+            `${baseURL}/ffmpeg-core.wasm`,
+            "application/wasm",
+          ),
+        });
+      } catch (error) {
+        console.error("Error loading FFmpeg:", error);
+        throw new Error("Failed to load FFmpeg");
+      }
+    }
+    return ffmpeg;
+  }
+
+  async function convert() {
+    const inputFile = fileInput?.files[0];
+    if (!inputFile) {
+      alert("Please select a file first!");
+      return;
+    }
+
+    const ffmpeg_inst = await getFFmpeg();
+
+    ffmpeg_inst.on("log", ({ type, message }) => {
+      console.log(`[${type}] ${message}`);
+    });
+    ffmpeg_inst.on("progress", ({ progress, time }) => {
+      // todo add <progress id="progress" value="0" max="100"></progress>
+      // progressEl.value = progress * 100;
+    });
+    const newType = extensionSelect.value;
+    const outFileName = inputFile.name.replace(/\.[^/.]+$/, `.${newType}`);
+
+    console.log("Start converting");
+    await ffmpeg_inst.writeFile(inputFile.name, await fetchFile(inputFile));
+    await ffmpeg_inst.exec(["-i", inputFile.name, outFileName]);
+    const data = await ffmpeg.readFile(outFileName);
+    console.log("Converting finished.");
+    console.log(data);
+
+    const img = document.createElement("img");
+    img.src = URL.createObjectURL(new Blob([data.buffer])); // for better browser support: ', { type: "image/png" }'
+    img.height = 60;
+    img.addEventListener("click", () => {
+      const link = document.createElement("a");
+      link.href = img.src;
+      link.download = outFileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+    // TODO: videos etc
+    (convertedFileArea?.querySelector("img") as HTMLImageElement)?.remove();
+    convertedFileArea.appendChild(img);
+  }
+  convertButton?.addEventListener("click", convert);
 </script>
