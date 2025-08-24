@@ -11,12 +11,12 @@ const something = ["mp3", "mp4", "jpg", "png", "webp", "webm", "wav", "gif", "mk
 
 <Layout>
   <section class="w-full h-full flex justify-center items-center">
-    <div class="flex flex-row gap-16 items-center">
+    <div class="flex flex-col md:flex-row gap-8 sm:gap-10 md:gap-6 lg:gap-8 xl:gap-12 2xl:gap-16 items-center">
       <!-- FILE UPLOAD -->
       <div class="flex flex-col items-center gap-4 pt-14">
       <!-- UPLOAD AREA -->
-      <div id="drop_area" class="hover:scale-110 cursor-pointer duration-500 ease-out border-dashed border-2 border-primary rounded-4xl w-90 h-60 bg-primary-transparent flex justify-center items-center">
-        <p class="text-primary">
+      <div id="drop_area" class="hover:scale-110 aspect-video w-52 sm:w-68 px-8 md:w-50 lg:w-70 xl:w-90 lg:px-10 cursor-pointer duration-500 ease-out border-dashed border-2 border-primary rounded-4xl bg-primary-transparent flex justify-center items-center">
+        <p class="text-primary text-center">
           Drag and drop a file or click to upload
         </p>
         <input type="file" class="hidden" id="file_input" multiple=false />
@@ -27,16 +27,23 @@ const something = ["mp3", "mp4", "jpg", "png", "webp", "webm", "wav", "gif", "mk
       <!-- SUBMIT BUTTON -->
       <Button>Submit</Button>
       </div>
-      <ion-icon name="chevron-forward-outline" class="text-5xl" />
+
+      <ion-icon name="chevron-forward-outline" class="text-5xl hidden md:block" />
+      <ion-icon name="chevron-down-outline" class="text-5xl md:hidden" />
+
       <!-- TARGET FILETYPE -->
       <Select label="Target filetype:">
         {something.map((elem) => 
           <Option value={elem}>{elem}</Option>
         )}
       </Select>
-      <ion-icon name="chevron-forward-outline" class="text-5xl" />
-      <div class="w-90 flex justify-center items-center hover:scale-110 cursor-pointer duration-500 ease-out border-dashed border-2 border-primary rounded-4xl bg-primary-transparent h-60">
-        <ion-icon name="download-outline" class="text-9xl text-font-secondary pb-6" />
+
+      <ion-icon name="chevron-forward-outline" class="text-5xl hidden md:block" />
+      <ion-icon name="chevron-down-outline" class="text-5xl md:hidden" />
+
+      <!-- CONVERTED FILE -->
+      <div class="aspect-video w-52 sm:w-68 px-8 md:w-50 lg:w-70 xl:w-90 lg:px-10 flex justify-center items-center hover:scale-110 cursor-pointer duration-500 ease-out border-dashed border-2 border-primary rounded-4xl bg-primary-transparent">
+        <ion-icon name="download-outline" class="text-6xl pb-2 sm:text-7xl md:text-6xl md:pb-3 lg:text-7xl lg:pb-4 xl:text-8xl xl:bg-6 text-font-secondary" />
       </div>
     </div>
   </section>
