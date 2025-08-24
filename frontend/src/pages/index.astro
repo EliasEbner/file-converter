@@ -16,23 +16,23 @@ const something = ["mp3", "mp4", "jpg", "png", "webp", "webm", "wav", "gif", "mk
       <!-- FILE UPLOAD -->
       <div class="flex flex-col items-center gap-4 pt-14">
 
-      <!-- UPLOAD AREA -->
-      <div id="drop_area" class="hover:scale-110 aspect-video w-52 sm:w-68 px-8 md:w-50 lg:w-70 xl:w-90 lg:px-10 cursor-pointer duration-500 ease-out border-dashed border-2 border-primary rounded-4xl bg-primary-transparent flex justify-center items-center">
-        <p class="text-primary text-center">
-          Drag and drop a file or click to upload
+        <!-- UPLOAD AREA -->
+        <div id="drop-area" class="hover:scale-110 aspect-video w-52 sm:w-68 px-8 md:w-50 lg:w-70 xl:w-90 lg:px-10 cursor-pointer duration-500 ease-out border-dashed border-2 border-primary rounded-4xl bg-primary-transparent flex justify-center items-center">
+          <p class="text-primary text-center">
+            Drag and drop a file or click to upload
+          </p>
+
+          <!-- HIDDEN INPUT FOR FILE -->
+          <input type="file" class="hidden" id="file-input" multiple=false />
+        </div>
+
+
+        <!-- FILENAME ONCE UPLOADED -->
+        <p id="file-name" class="hidden w-90 text-center">
         </p>
 
-        <!-- HIDDEN INPUT FOR FILE -->
-        <input type="file" class="hidden" id="file_input" multiple=false />
-      </div>
-
-
-      <!-- FILENAME ONCE UPLOADED -->
-      <p id="file_name" class="hidden w-90 text-center">
-      </p>
-
-      <!-- SUBMIT BUTTON -->
-      <Button>Submit</Button>
+        <!-- SUBMIT BUTTON -->
+        <Button>Submit</Button>
       </div>
 
 
@@ -41,11 +41,13 @@ const something = ["mp3", "mp4", "jpg", "png", "webp", "webm", "wav", "gif", "mk
       <ion-icon name="chevron-down-outline" class="text-5xl md:hidden" />
 
       <!-- TARGET FILETYPE -->
-      <Select label="Target filetype:">
-        {something.map((elem) => 
-          <Option value={elem}>{elem}</Option>
-        )}
-      </Select>
+      <div id="extension-select-container" class="low-opacity">
+        <Select disabled id="extension-select" label="Target filetype">
+          {something.map((elem) => 
+            <Option value={elem}>{elem}</Option>
+          )}
+        </Select>
+      </div>
 
       <!-- CHEVRON -->
       <ion-icon name="chevron-forward-outline" class="text-5xl hidden md:block" />
@@ -59,16 +61,32 @@ const something = ["mp3", "mp4", "jpg", "png", "webp", "webm", "wav", "gif", "mk
   </section>
 </Layout>
 
+<!-- STYLE ---------------------------------------------------------------------------------------->
+
 <style>
   .hidden {
     display: hidden;
   }
+
+  .low-opacity {
+    opacity: 30%;
+  }
 </style>
 
+<!-- SCRIPT --------------------------------------------------------------------------------------->
+
 <script>
-  const dropArea = document.getElementById("drop_area");
-  const fileNameParagraph = document.getElementById("file_name");
-  const fileInput: HTMLInputElement | null = document.getElementById("file_input") as HTMLInputElement | null;
+  const dropArea: HTMLDivElement | null =
+    document.getElementById("drop-area") as HTMLDivElement | null;
+  const fileNameParagraph: HTMLParagraphElement | null =
+    document.getElementById("file-name") as HTMLParagraphElement | null;
+  const fileInput: HTMLInputElement | null =
+    document.getElementById("file-input") as HTMLInputElement | null;
+  const extensionSelect: HTMLSelectElement | null =
+    document.getElementById("extension-select") as HTMLSelectElement | null;
+  const extensionSelectContainer: HTMLDivElement | null =
+    document.getElementById("extension-select-container") as HTMLDivElement | null;
+
 
   if(dropArea) {
     // needed to make drag and drop work
@@ -80,10 +98,12 @@ const something = ["mp3", "mp4", "jpg", "png", "webp", "webm", "wav", "gif", "mk
   // triggered regardless of whether file is uploaded through
   // drag and drop or click to upload
   function onFileUpload(file: File | null) {
-    if (dropArea && fileNameParagraph && fileInput && file){
-      dropArea.classList.toggle("hidden");
-      fileNameParagraph.classList.toggle("hidden");
+    if (dropArea && fileNameParagraph && extensionSelectContainer && extensionSelect && fileInput && file){
+      dropArea.classList.add("hidden");
+      fileNameParagraph.classList.remove("hidden");
       fileNameParagraph.innerText = file.name;
+      extensionSelect.disabled = false;
+      extensionSelectContainer.classList.remove("low-opacity")
     }
   }
 

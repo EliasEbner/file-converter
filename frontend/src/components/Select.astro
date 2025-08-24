@@ -1,10 +1,10 @@
 ---
-const { id, label, placeholder } = Astro.props;
+const { id, label, placeholder, disabled } = Astro.props;
 ---
 
 <div class="relative">
   <label class="absolute -top-6" for={id}>{label}</label>
-  <select id={id} class="duration-500 ease-out w-30 sm:w-32 md:w-36 lg:w-44 xl:w-52 2xl:w-60 px-4 h-10 flex justify-center rounded-4xl items-center focus:outline-none bg-neutral cursor-pointer custom-select">
+  <select disabled={disabled} id={id} class="duration-500 ease-out w-30 sm:w-32 md:w-36 lg:w-44 xl:w-52 2xl:w-60 px-4 h-10 flex justify-center rounded-4xl items-center focus:outline-none bg-neutral cursor-pointer custom-select">
     <slot />
   </select>
 </div>
