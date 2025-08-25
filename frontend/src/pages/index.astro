@@ -1,9 +1,10 @@
 ---
 import "../styles/global.css";
 import Layout from "../layouts/Layout.astro";
-// import Button from "../components/Button.astro"; // document.getElementById doesn't work idk
+import Button from "../components/Button.astro";
 import Select from "../components/Select.astro";
 import Option from "../components/Option.astro";
+import ProgressBar from "../components/ProgressBar.astro";
 
 type KeyLabelPair = {
   key: string;
@@ -33,7 +34,7 @@ const fileExtensions: KeyLabelPair[] = [
 ---
 
 <Layout>
-  <section class="w-full h-full flex justify-center items-center">
+  <section class="relative w-full h-full flex justify-center items-center">
     <div
       class="flex flex-col md:flex-row gap-8 sm:gap-10 md:gap-6 lg:gap-8 xl:gap-12 2xl:gap-16 items-center"
     >
@@ -57,15 +58,13 @@ const fileExtensions: KeyLabelPair[] = [
       </div>
 
       <!-- CHEVRON -->
-      <ion-icon name="chevron-forward-outline" class="text-5xl hidden md:block"
-      ></ion-icon>
-      <ion-icon name="chevron-down-outline" class="text-5xl md:hidden"
-      ></ion-icon>
+      <ion-icon name="chevron-forward-outline" class="text-5xl hidden md:block" />
+      <ion-icon name="chevron-down-outline" class="text-5xl md:hidden" />
 
       <!-- TARGET FILETYPE -->
       <div
         id="extension-select-container"
-        class="low-opacity flex flex-col items-center gap-4"
+        class="opacity-30 flex flex-col items-center gap-4"
       >
         <Select disabled id="extension-select" label="Target filetype">
           {
@@ -76,7 +75,7 @@ const fileExtensions: KeyLabelPair[] = [
         </Select>
 
         <!-- CONVERT BUTTON -->
-        <button id="convert-button">Convert</button>
+        <Button disabled id="convert-button">Convert</Button>
       </div>
 
       <!-- CHEVRON -->
@@ -88,7 +87,7 @@ const fileExtensions: KeyLabelPair[] = [
       <!-- CONVERTED FILE -->
       <div
         id="converted-file-area"
-        class="aspect-video low-opacity w-52 sm:w-68 px-8 md:w-50 lg:w-70 xl:w-90 lg:px-10 flex justify-center items-center hover:scale-110 cursor-pointer duration-500 ease-out border-dashed border-2 border-primary rounded-4xl bg-primary-transparent"
+        class="aspect-video opacity-30 w-52 sm:w-68 px-8 md:w-50 lg:w-70 xl:w-90 lg:px-10 flex justify-center items-center hover:scale-110 cursor-pointer duration-500 ease-out border-dashed border-2 border-primary rounded-4xl bg-primary-transparent"
       >
         <ion-icon
           name="download-outline"
@@ -96,17 +95,28 @@ const fileExtensions: KeyLabelPair[] = [
         ></ion-icon>
       </div>
     </div>
+    <div id="conversion-progress-bar-container" class="absolute w-full justify-center items-center bottom-20 hidden">
+      <ProgressBar labelId="conversion-progress-bar-label" value="0" id="conversion-progress-bar" />
+    </div>
   </section>
 </Layout>
 
 <!-- STYLE ---------------------------------------------------------------------------------------->
 
 <style>
-  .hidden {
-    display: hidden;
+  .button-enabled {
+    cursor: pointer;
   }
 
-  .low-opacity {
+  .button-enabled:hover {
+    transform: scale(110%);
+  }
+
+  .button-enabled:active {
+    transform: scale(95%);
+  }
+
+  .button-disabled {
     opacity: 30%;
   }
 </style>
@@ -135,6 +145,19 @@ const fileExtensions: KeyLabelPair[] = [
   const convertButton: HTMLButtonElement | null = document.getElementById(
     "convert-button",
   ) as HTMLButtonElement | null;
+  const conversionProgressBar: HTMLProgressElement | null = document.getElementById(
+    "conversion-progress-bar",
+  ) as HTMLProgressElement | null;
+  const conversionProgressBarContainer: HTMLDivElement | null = document.getElementById(
+    "conversion-progress-bar-container",
+  ) as HTMLDivElement | null;
+  const conversionProgressBarLabel: HTMLLabelElement | null = document.getElementById(
+    "conversion-progress-bar-label",
+  ) as HTMLLabelElement | null;
+
+
+  convertButton?.classList.remove("button-enabled")
+  convertButton?.classList.add("button-disabled")
 
   if (dropArea) {
     // needed to make drag and drop work
@@ -152,13 +175,17 @@ const fileExtensions: KeyLabelPair[] = [
       extensionSelectContainer &&
       extensionSelect &&
       fileInput &&
-      file
+      file &&
+      convertButton
     ) {
       dropArea.classList.add("hidden");
       fileNameParagraph.classList.remove("hidden");
       fileNameParagraph.innerText = file.name;
+      convertButton.disabled = false;
+      convertButton.classList.remove("button-disabled");
+      convertButton.classList.add("button-enabled");
       extensionSelect.disabled = false;
-      extensionSelectContainer.classList.remove("low-opacity");
+      extensionSelectContainer.classList.remove("opacity-30");
     }
   }
 
@@ -192,8 +219,10 @@ const fileExtensions: KeyLabelPair[] = [
     onFileUpload(fileInput?.files?.[0] ?? null);
   }
 
-  function extensionChangeHandler(_event: Event) {
-    convertedFileArea?.classList.remove("low-opacity");
+  function extensionChangeHandler(event: Event) {
+    if (extensionSelect && extensionSelect.value !== "") {
+      convertedFileArea?.classList.remove("opacity-30");
+    }
   }
 
   dropArea?.addEventListener("drop", dropAreaDropHandler);
@@ -236,11 +265,13 @@ const fileExtensions: KeyLabelPair[] = [
   }
 
   async function convert() {
-    const inputFile = fileInput?.files[0];
+    const inputFile = fileInput?.files?.[0];
     if (!inputFile) {
-      alert("Please select a file first!");
+      alert("Couldn't read file properly. Please try again.")
       return;
     }
+    conversionProgressBarContainer?.classList.remove("hidden")
+    conversionProgressBarContainer?.classList.add("flex")
 
     const ffmpeg_inst = await getFFmpeg();
 
@@ -248,21 +279,27 @@ const fileExtensions: KeyLabelPair[] = [
       console.log(`[${type}] ${message}`);
     });
     ffmpeg_inst.on("progress", ({ progress, time }) => {
-      // todo add <progress id="progress" value="0" max="100"></progress>
-      // progressEl.value = progress * 100;
+      if (conversionProgressBar && conversionProgressBarLabel) {
+        conversionProgressBar.value = progress * 100;
+        conversionProgressBarLabel.innerText = (progress * 100).toFixed(0).toString() + "%"
+      }
     });
-    const newType = extensionSelect.value;
+    const newType = extensionSelect?.value;
     const outFileName = inputFile.name.replace(/\.[^/.]+$/, `.${newType}`);
 
-    console.log("Start converting");
+    console.log("Starting conversion...");
+
     await ffmpeg_inst.writeFile(inputFile.name, await fetchFile(inputFile));
     await ffmpeg_inst.exec(["-i", inputFile.name, outFileName]);
-    const data = await ffmpeg.readFile(outFileName);
-    console.log("Converting finished.");
-    console.log(data);
+    const data = await ffmpeg?.readFile(outFileName);
+
+    console.log("Conversion completed.");
+
+    conversionProgressBarContainer?.classList.remove("flex");
+    conversionProgressBarContainer?.classList.add("hidden");
 
     const img = document.createElement("img");
-    img.src = URL.createObjectURL(new Blob([data.buffer])); // for better browser support: ', { type: "image/png" }'
+    img.src = URL.createObjectURL(new Blob([data?.buffer])); // for better browser support: ', { type: "image/png" }'
     img.height = 60;
     img.addEventListener("click", () => {
       const link = document.createElement("a");

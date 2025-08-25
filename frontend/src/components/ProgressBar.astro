@@ -1,0 +1,23 @@
+---
+const { value, id, labelId } = Astro.props;
+---
+
+<div class="flex flex-row gap-2 items-center">
+  <progress id={id} class="custom-progress-bar rounded-full overflow-hidden w-70 h-3" value={value} max="100"></progress>
+  <label for={id} id={labelId} class="text-font-secondary text-sm">
+  </label>
+</div>
+
+<style>
+  .custom-progress-bar {
+    -webkit-appearance: none;
+  }
+
+  .custom-progress-bar::-webkit-progress-bar {
+    background-color: var(--color-neutral);
+  }
+
+  .custom-progress-bar::-webkit-progress-value {
+    background-color: var(--color-primary);
+  }
+</style>

@@ -1,7 +1,24 @@
 ---
-const { onclick } = Astro.params;
+const { onclick, id, disabled } = Astro.props;
 ---
 
-<button class="focus:outline-none bg-primary hover:scale-110 active:scale-95 duration-200 ease-in-out rounded-4xl px-8 h-10 text-font-light cursor-pointer text-lg font-bold" onclick={onclick}>
+<button
+  id={id}
+  disabled={disabled}
+  class={`
+    focus:outline-none
+    bg-primary
+    duration-200
+    ease-in-out
+    rounded-4xl
+    px-8
+    h-10
+    text-font-light
+    text-lg
+    font-bold
+    button-enabled
+  `}
+  onclick={onclick}
+>
   <slot />
 </button>
