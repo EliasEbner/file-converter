@@ -54,7 +54,7 @@ const fileExtensions: KeyLabelPair[] = [
         </div>
 
         <!-- FILENAME ONCE UPLOADED -->
-        <p id="file-name" class="hidden w-90 text-center"></p>
+        <p id="file-name" class="hidden w-52 sm:w-68 px-8 md:w-50 lg:w-70 xl:w-90 text-center"></p>
       </div>
 
       <!-- CHEVRON -->
@@ -85,14 +85,19 @@ const fileExtensions: KeyLabelPair[] = [
       ></ion-icon>
 
       <!-- CONVERTED FILE -->
-      <div
+      <div class="opacity-30 w-52 sm:w-68 md:w-50 lg:w-70 xl:w-90 ">
+      <Button
         id="converted-file-area"
-        class="aspect-video opacity-30 w-52 sm:w-68 px-8 md:w-50 lg:w-70 xl:w-90 lg:px-10 flex justify-center items-center hover:scale-110 cursor-pointer duration-500 ease-out border-dashed border-2 border-primary rounded-4xl bg-primary-transparent"
+        class="px-8 lg:px-10 flex flex-row justify-center items-center hover:scale-110 cursor-pointer duration-500 ease-out border-dashed border-2 border-primary rounded-4xl bg-primary-transparent"
       >
         <ion-icon
           name="download-outline"
-          class="text-6xl pb-2 sm:text-7xl md:text-6xl md:pb-3 lg:text-7xl lg:pb-4 xl:text-8xl xl:bg-6 text-font-secondary"
-        ></ion-icon>
+          class="text-3xl pt-1 text-font-light"
+        />
+        <span class="">
+          Download converted file
+        </span>
+      </Button>
       </div>
     </div>
     <div id="conversion-progress-bar-container" class="absolute w-full justify-center items-center bottom-20 hidden">
@@ -156,8 +161,10 @@ const fileExtensions: KeyLabelPair[] = [
   ) as HTMLLabelElement | null;
 
 
-  convertButton?.classList.remove("button-enabled")
-  convertButton?.classList.add("button-disabled")
+  convertButton?.classList.remove("hover:scale-110")
+  convertButton?.classList.remove("active:scale-95")
+  convertButton?.classList.remove("cursor-pointer")
+  convertButton?.classList.add("opacity-30")
 
   if (dropArea) {
     // needed to make drag and drop work
@@ -181,9 +188,6 @@ const fileExtensions: KeyLabelPair[] = [
       dropArea.classList.add("hidden");
       fileNameParagraph.classList.remove("hidden");
       fileNameParagraph.innerText = file.name;
-      convertButton.disabled = false;
-      convertButton.classList.remove("button-disabled");
-      convertButton.classList.add("button-enabled");
       extensionSelect.disabled = false;
       extensionSelectContainer.classList.remove("opacity-30");
     }
@@ -220,8 +224,19 @@ const fileExtensions: KeyLabelPair[] = [
   }
 
   function extensionChangeHandler(event: Event) {
-    if (extensionSelect && extensionSelect.value !== "") {
-      convertedFileArea?.classList.remove("opacity-30");
+    if (convertButton && extensionSelect) {
+      if (extensionSelect.value !== "") {
+        convertButton.disabled = false;
+        convertButton.classList.remove("opacity-30");
+        convertButton.classList.add("hover:scale-110");
+        convertButton.classList.add("cursor-pointer");
+        convertButton.classList.add("active:scale-95");
+      } else {
+        convertButton.classList.add("opacity-30");
+        convertButton.classList.remove("hover:scale-110");
+        convertButton.classList.remove("cursor-pointer");
+        convertButton.classList.remove("active:scale-95");
+      }
     }
   }
 
@@ -297,8 +312,10 @@ const fileExtensions: KeyLabelPair[] = [
 
     conversionProgressBarContainer?.classList.remove("flex");
     conversionProgressBarContainer?.classList.add("hidden");
+    convertedFileArea?.classList.remove("opacity-30");
 
     const img = document.createElement("img");
+    img.classList.add("hidden")
     img.src = URL.createObjectURL(new Blob([data?.buffer])); // for better browser support: ', { type: "image/png" }'
     img.height = 60;
     img.addEventListener("click", () => {
