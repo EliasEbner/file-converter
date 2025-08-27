@@ -62,8 +62,8 @@ const fileExtensions: KeyLabelPair[] = [
       </div>
 
       <!-- CHEVRON -->
-      <ion-icon name="chevron-forward-outline" class="text-5xl hidden md:block" />
-      <ion-icon name="chevron-down-outline" class="text-5xl md:hidden" />
+      <ion-icon name="chevron-forward-outline" class="text-5xl hidden md:block text-font-secondary first-chevron duration-500 ease-in-out" />
+      <ion-icon name="chevron-down-outline" class="text-5xl md:hidden text-font-secondary first-chevron duration-500 ease-in-out" />
 
       <!-- TARGET FILETYPE -->
       <div
@@ -83,10 +83,8 @@ const fileExtensions: KeyLabelPair[] = [
       </div>
 
       <!-- CHEVRON -->
-      <ion-icon name="chevron-forward-outline" class="text-5xl hidden md:block"
-      ></ion-icon>
-      <ion-icon name="chevron-down-outline" class="text-5xl md:hidden"
-      ></ion-icon>
+      <ion-icon name="chevron-forward-outline" class="text-5xl hidden md:block text-font-secondary second-chevron duration-500 ease-in-out" />
+      <ion-icon name="chevron-down-outline" class="text-5xl md:hidden text-font-secondary second-chevron duration-500 ease-in-out" />
 
       <!-- CONVERTED FILE -->
       <div class="w-52 sm:w-68 md:w-50 lg:w-70 xl:w-90">
@@ -172,6 +170,14 @@ const fileExtensions: KeyLabelPair[] = [
     document.getElementById(
       "conversion-progress-bar-label",
     ) as HTMLLabelElement | null;
+  const firstChevron: HTMLCollectionOf<Element> | null =
+    document.getElementsByClassName(
+      "first-chevron",
+    ) as HTMLCollectionOf<Element> | null;
+  const secondChevron: HTMLCollectionOf<Element> | null =
+    document.getElementsByClassName(
+      "second-chevron",
+    ) as HTMLCollectionOf<Element> | null;
 
 
   if (dropArea) {
@@ -191,11 +197,15 @@ const fileExtensions: KeyLabelPair[] = [
       extensionSelect &&
       fileInput &&
       file &&
-      convertButton
+      convertButton &&
+      firstChevron
     ) {
       dropAreaLabel.innerText = file.name;
       extensionSelect.disabled = false;
       extensionSelectContainer.classList.remove("opacity-30");
+      for (const chevron of firstChevron) {
+        chevron.classList.remove("text-font-secondary");
+      }
     }
     extensionChangeHandler(null);
   }
@@ -323,8 +333,11 @@ const fileExtensions: KeyLabelPair[] = [
 
     conversionProgressBarContainer?.classList.remove("flex");
     conversionProgressBarContainer?.classList.add("hidden");
-    if (downloadConvertedFileButton) {
+    if (downloadConvertedFileButton && secondChevron) {
       downloadConvertedFileButton.disabled = false;
+      for (const chevron of secondChevron) {
+        chevron.classList.remove("text-font-secondary")
+      }
     }
 
     currentDownload = {

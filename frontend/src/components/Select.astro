@@ -3,7 +3,7 @@ const { id, label, disabled } = Astro.props;
 ---
 
 <div class="relative">
-  <label class="absolute -top-6" for={id}>{label}</label>
+  <label class="absolute -top-6 text-font-secondary" for={id}>{label}</label>
   <select disabled={disabled} id={id} class="duration-500 disabled:opacity-30 ease-out w-30 sm:w-32 md:w-36 lg:w-44 xl:w-52 2xl:w-60 px-4 h-10 flex justify-center rounded-4xl items-center focus:outline-none bg-neutral cursor-pointer custom-select">
     <slot />
   </select>
