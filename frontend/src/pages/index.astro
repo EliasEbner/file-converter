@@ -54,12 +54,18 @@ const fileExtensions: KeyLabelPair[] = [
         </div>
 
         <!-- FILENAME ONCE UPLOADED -->
-        <p id="file-name" class="hidden w-52 sm:w-68 px-8 md:w-50 lg:w-70 xl:w-90 text-center"></p>
+        <p
+          id="file-name"
+          class="hidden w-52 sm:w-68 px-8 md:w-50 lg:w-70 xl:w-90 text-center"
+        >
+        </p>
       </div>
 
       <!-- CHEVRON -->
-      <ion-icon name="chevron-forward-outline" class="text-5xl hidden md:block" />
-      <ion-icon name="chevron-down-outline" class="text-5xl md:hidden" />
+      <ion-icon name="chevron-forward-outline" class="text-5xl hidden md:block"
+      ></ion-icon>
+      <ion-icon name="chevron-down-outline" class="text-5xl md:hidden"
+      ></ion-icon>
 
       <!-- TARGET FILETYPE -->
       <div
@@ -85,23 +91,27 @@ const fileExtensions: KeyLabelPair[] = [
       ></ion-icon>
 
       <!-- CONVERTED FILE -->
-      <div class="opacity-30 w-52 sm:w-68 md:w-50 lg:w-70 xl:w-90 ">
-      <Button
-        id="converted-file-area"
-        class="px-8 lg:px-10 flex flex-row justify-center items-center hover:scale-110 cursor-pointer duration-500 ease-out border-dashed border-2 border-primary rounded-4xl bg-primary-transparent"
-      >
-        <ion-icon
-          name="download-outline"
-          class="text-3xl pt-1 text-font-light"
-        />
-        <span class="">
-          Download converted file
-        </span>
-      </Button>
+      <div class="opacity-30 w-52 sm:w-68 md:w-50 lg:w-70 xl:w-90">
+        <Button
+          id="converted-file-area"
+          class="px-8 lg:px-10 flex flex-row justify-center items-center hover:scale-110 cursor-pointer duration-500 ease-out border-dashed border-2 border-primary rounded-4xl bg-primary-transparent"
+        >
+          <ion-icon
+            name="download-outline"
+            class="text-3xl pt-1 text-font-light"></ion-icon>
+          <span class=""> Download converted file </span>
+        </Button>
       </div>
     </div>
-    <div id="conversion-progress-bar-container" class="absolute w-full justify-center items-center bottom-20 hidden">
-      <ProgressBar labelId="conversion-progress-bar-label" value="0" id="conversion-progress-bar" />
+    <div
+      id="conversion-progress-bar-container"
+      class="absolute w-full justify-center items-center bottom-20 hidden"
+    >
+      <ProgressBar
+        labelId="conversion-progress-bar-label"
+        value="0"
+        id="conversion-progress-bar"
+      />
     </div>
   </section>
 </Layout>
@@ -150,21 +160,23 @@ const fileExtensions: KeyLabelPair[] = [
   const convertButton: HTMLButtonElement | null = document.getElementById(
     "convert-button",
   ) as HTMLButtonElement | null;
-  const conversionProgressBar: HTMLProgressElement | null = document.getElementById(
-    "conversion-progress-bar",
-  ) as HTMLProgressElement | null;
-  const conversionProgressBarContainer: HTMLDivElement | null = document.getElementById(
-    "conversion-progress-bar-container",
-  ) as HTMLDivElement | null;
-  const conversionProgressBarLabel: HTMLLabelElement | null = document.getElementById(
-    "conversion-progress-bar-label",
-  ) as HTMLLabelElement | null;
+  const conversionProgressBar: HTMLProgressElement | null =
+    document.getElementById(
+      "conversion-progress-bar",
+    ) as HTMLProgressElement | null;
+  const conversionProgressBarContainer: HTMLDivElement | null =
+    document.getElementById(
+      "conversion-progress-bar-container",
+    ) as HTMLDivElement | null;
+  const conversionProgressBarLabel: HTMLLabelElement | null =
+    document.getElementById(
+      "conversion-progress-bar-label",
+    ) as HTMLLabelElement | null;
 
-
-  convertButton?.classList.remove("hover:scale-110")
-  convertButton?.classList.remove("active:scale-95")
-  convertButton?.classList.remove("cursor-pointer")
-  convertButton?.classList.add("opacity-30")
+  convertButton?.classList.remove("hover:scale-110");
+  convertButton?.classList.remove("active:scale-95");
+  convertButton?.classList.remove("cursor-pointer");
+  convertButton?.classList.add("opacity-30");
 
   if (dropArea) {
     // needed to make drag and drop work
@@ -191,12 +203,12 @@ const fileExtensions: KeyLabelPair[] = [
       extensionSelect.disabled = false;
       extensionSelectContainer.classList.remove("opacity-30");
     }
+    extensionChangeHandler(null);
   }
 
   // only on drag and drop upload
   function dropAreaDropHandler(event: DragEvent) {
     event.preventDefault();
-    console.log("something happened");
 
     if (event.dataTransfer?.items && event.dataTransfer.items.length !== 0) {
       const file = event.dataTransfer.items[0].getAsFile();
@@ -219,11 +231,11 @@ const fileExtensions: KeyLabelPair[] = [
 
   // for upload with click: once uploaded change
   // the contents of the filename element
-  function fileInputChangeHandler(_event: Event) {
+  function fileInputChangeHandler(_event: Event | null) {
     onFileUpload(fileInput?.files?.[0] ?? null);
   }
 
-  function extensionChangeHandler(event: Event) {
+  function extensionChangeHandler(event: Event | null) {
     if (convertButton && extensionSelect) {
       if (extensionSelect.value !== "") {
         convertButton.disabled = false;
@@ -249,9 +261,9 @@ const fileExtensions: KeyLabelPair[] = [
   import { fetchFile, toBlobURL } from "@ffmpeg/util";
 
   let ffmpeg: FFmpeg | null = null;
+  let currentDownload: { name: string; url: string } | null = null;
 
   async function getFFmpeg() {
-    console.log("Getting FFmpeg instance");
     if (ffmpeg) {
       return ffmpeg;
     }
@@ -280,13 +292,18 @@ const fileExtensions: KeyLabelPair[] = [
   }
 
   async function convert() {
+    if (currentDownload) {
+      URL.revokeObjectURL(currentDownload.url);
+      currentDownload = null;
+      convertedFileArea?.parentElement?.classList.add("opacity-30");
+    }
     const inputFile = fileInput?.files?.[0];
     if (!inputFile) {
-      alert("Couldn't read file properly. Please try again.")
+      alert("Couldn't read file properly. Please try again.");
       return;
     }
-    conversionProgressBarContainer?.classList.remove("hidden")
-    conversionProgressBarContainer?.classList.add("flex")
+    conversionProgressBarContainer?.classList.remove("hidden");
+    conversionProgressBarContainer?.classList.add("flex");
 
     const ffmpeg_inst = await getFFmpeg();
 
@@ -296,39 +313,44 @@ const fileExtensions: KeyLabelPair[] = [
     ffmpeg_inst.on("progress", ({ progress, time }) => {
       if (conversionProgressBar && conversionProgressBarLabel) {
         conversionProgressBar.value = progress * 100;
-        conversionProgressBarLabel.innerText = (progress * 100).toFixed(0).toString() + "%"
+        conversionProgressBarLabel.innerText =
+          (progress * 100).toFixed(0).toString() + "%";
       }
     });
     const newType = extensionSelect?.value;
     const outFileName = inputFile.name.replace(/\.[^/.]+$/, `.${newType}`);
 
-    console.log("Starting conversion...");
+    console.log("Starting conversion to " + newType + "(" + outFileName + ")");
 
     await ffmpeg_inst.writeFile(inputFile.name, await fetchFile(inputFile));
+
+    // TODO: error handling like 'unsupported conversion'
     await ffmpeg_inst.exec(["-i", inputFile.name, outFileName]);
+
     const data = await ffmpeg?.readFile(outFileName);
 
     console.log("Conversion completed.");
 
     conversionProgressBarContainer?.classList.remove("flex");
     conversionProgressBarContainer?.classList.add("hidden");
-    convertedFileArea?.classList.remove("opacity-30");
 
-    const img = document.createElement("img");
-    img.classList.add("hidden")
-    img.src = URL.createObjectURL(new Blob([data?.buffer])); // for better browser support: ', { type: "image/png" }'
-    img.height = 60;
-    img.addEventListener("click", () => {
+    currentDownload = {
+      name: outFileName,
+      url: URL.createObjectURL(new Blob([data?.buffer])),
+    }; // for better browser support: ', { type: "image/png" }'
+    convertedFileArea?.parentElement?.classList.remove("opacity-30");
+  }
+  convertButton?.addEventListener("click", convert);
+
+  convertedFileArea?.addEventListener("click", () => {
+    if (currentDownload) {
       const link = document.createElement("a");
-      link.href = img.src;
-      link.download = outFileName;
+      link.href = currentDownload.url;
+      link.download = currentDownload.name;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-    });
-    // TODO: videos etc
-    (convertedFileArea?.querySelector("img") as HTMLImageElement)?.remove();
-    convertedFileArea.appendChild(img);
-  }
-  convertButton?.addEventListener("click", convert);
+    }
+  });
+  fileInputChangeHandler(null);
 </script>
