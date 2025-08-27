@@ -43,9 +43,9 @@ const fileExtensions: KeyLabelPair[] = [
         <!-- UPLOAD AREA -->
         <div
           id="drop-area"
-          class="hover:scale-110 aspect-video w-52 sm:w-68 px-8 md:w-50 lg:w-70 xl:w-90 lg:px-10 cursor-pointer duration-500 ease-out border-dashed border-2 border-primary rounded-4xl bg-primary-transparent flex justify-center items-center"
+          class="hover:scale-105 aspect-video w-52 sm:w-68 px-8 md:w-50 lg:w-70 xl:w-90 lg:px-10 cursor-pointer duration-1000 ease-out border-dashed border-2 border-primary rounded-4xl bg-primary-transparent flex justify-center items-center"
         >
-          <p class="text-primary text-center">
+          <p id="drop-area-label" class="text-primary text-center">
             Drag and drop a file or click to upload
           </p>
 
@@ -62,15 +62,13 @@ const fileExtensions: KeyLabelPair[] = [
       </div>
 
       <!-- CHEVRON -->
-      <ion-icon name="chevron-forward-outline" class="text-5xl hidden md:block"
-      ></ion-icon>
-      <ion-icon name="chevron-down-outline" class="text-5xl md:hidden"
-      ></ion-icon>
+      <ion-icon name="chevron-forward-outline" class="text-5xl hidden md:block" />
+      <ion-icon name="chevron-down-outline" class="text-5xl md:hidden" />
 
       <!-- TARGET FILETYPE -->
       <div
         id="extension-select-container"
-        class="opacity-30 flex flex-col items-center gap-4"
+        class="flex flex-col items-center gap-4"
       >
         <Select disabled id="extension-select" label="Target filetype">
           {
@@ -91,15 +89,17 @@ const fileExtensions: KeyLabelPair[] = [
       ></ion-icon>
 
       <!-- CONVERTED FILE -->
-      <div class="opacity-30 w-52 sm:w-68 md:w-50 lg:w-70 xl:w-90">
+      <div class="w-52 sm:w-68 md:w-50 lg:w-70 xl:w-90">
         <Button
-          id="converted-file-area"
-          class="px-8 lg:px-10 flex flex-row justify-center items-center hover:scale-110 cursor-pointer duration-500 ease-out border-dashed border-2 border-primary rounded-4xl bg-primary-transparent"
+          id="download-converted-file-button"
+          disabled
         >
-          <ion-icon
-            name="download-outline"
-            class="text-3xl pt-1 text-font-light"></ion-icon>
-          <span class=""> Download converted file </span>
+          <div class="flex flex-row justify-center items-center gap-2">
+            <ion-icon
+              name="download-outline"
+              class="text-2xl text-font-light"></ion-icon>
+            <span class=""> Download converted file </span>
+          </div>
         </Button>
       </div>
     </div>
@@ -142,8 +142,8 @@ const fileExtensions: KeyLabelPair[] = [
   const dropArea: HTMLDivElement | null = document.getElementById(
     "drop-area",
   ) as HTMLDivElement | null;
-  const fileNameParagraph: HTMLParagraphElement | null =
-    document.getElementById("file-name") as HTMLParagraphElement | null;
+  const dropAreaLabel: HTMLParagraphElement | null =
+    document.getElementById("drop-area-label") as HTMLParagraphElement | null;
   const fileInput: HTMLInputElement | null = document.getElementById(
     "file-input",
   ) as HTMLInputElement | null;
@@ -154,9 +154,9 @@ const fileExtensions: KeyLabelPair[] = [
     document.getElementById(
       "extension-select-container",
     ) as HTMLDivElement | null;
-  const convertedFileArea: HTMLDivElement | null = document.getElementById(
-    "converted-file-area",
-  ) as HTMLDivElement | null;
+  const downloadConvertedFileButton: HTMLButtonElement | null = document.getElementById(
+    "download-converted-file-button",
+  ) as HTMLButtonElement | null;
   const convertButton: HTMLButtonElement | null = document.getElementById(
     "convert-button",
   ) as HTMLButtonElement | null;
@@ -173,10 +173,6 @@ const fileExtensions: KeyLabelPair[] = [
       "conversion-progress-bar-label",
     ) as HTMLLabelElement | null;
 
-  convertButton?.classList.remove("hover:scale-110");
-  convertButton?.classList.remove("active:scale-95");
-  convertButton?.classList.remove("cursor-pointer");
-  convertButton?.classList.add("opacity-30");
 
   if (dropArea) {
     // needed to make drag and drop work
@@ -190,16 +186,14 @@ const fileExtensions: KeyLabelPair[] = [
   function onFileUpload(file: File | null) {
     if (
       dropArea &&
-      fileNameParagraph &&
+      dropAreaLabel &&
       extensionSelectContainer &&
       extensionSelect &&
       fileInput &&
       file &&
       convertButton
     ) {
-      dropArea.classList.add("hidden");
-      fileNameParagraph.classList.remove("hidden");
-      fileNameParagraph.innerText = file.name;
+      dropAreaLabel.innerText = file.name;
       extensionSelect.disabled = false;
       extensionSelectContainer.classList.remove("opacity-30");
     }
@@ -239,15 +233,8 @@ const fileExtensions: KeyLabelPair[] = [
     if (convertButton && extensionSelect) {
       if (extensionSelect.value !== "") {
         convertButton.disabled = false;
-        convertButton.classList.remove("opacity-30");
-        convertButton.classList.add("hover:scale-110");
-        convertButton.classList.add("cursor-pointer");
-        convertButton.classList.add("active:scale-95");
       } else {
-        convertButton.classList.add("opacity-30");
-        convertButton.classList.remove("hover:scale-110");
-        convertButton.classList.remove("cursor-pointer");
-        convertButton.classList.remove("active:scale-95");
+        convertButton.disabled = true;
       }
     }
   }
@@ -295,7 +282,7 @@ const fileExtensions: KeyLabelPair[] = [
     if (currentDownload) {
       URL.revokeObjectURL(currentDownload.url);
       currentDownload = null;
-      convertedFileArea?.parentElement?.classList.add("opacity-30");
+      downloadConvertedFileButton?.parentElement?.classList.add("opacity-30");
     }
     const inputFile = fileInput?.files?.[0];
     if (!inputFile) {
@@ -304,6 +291,9 @@ const fileExtensions: KeyLabelPair[] = [
     }
     conversionProgressBarContainer?.classList.remove("hidden");
     conversionProgressBarContainer?.classList.add("flex");
+    if (conversionProgressBarLabel) {
+      conversionProgressBarLabel.innerText = "0%";
+    }
 
     const ffmpeg_inst = await getFFmpeg();
 
@@ -333,16 +323,19 @@ const fileExtensions: KeyLabelPair[] = [
 
     conversionProgressBarContainer?.classList.remove("flex");
     conversionProgressBarContainer?.classList.add("hidden");
+    if (downloadConvertedFileButton) {
+      downloadConvertedFileButton.disabled = false;
+    }
 
     currentDownload = {
       name: outFileName,
       url: URL.createObjectURL(new Blob([data?.buffer])),
     }; // for better browser support: ', { type: "image/png" }'
-    convertedFileArea?.parentElement?.classList.remove("opacity-30");
+    downloadConvertedFileButton?.parentElement?.classList.remove("opacity-30");
   }
   convertButton?.addEventListener("click", convert);
 
-  convertedFileArea?.addEventListener("click", () => {
+  downloadConvertedFileButton?.addEventListener("click", () => {
     if (currentDownload) {
       const link = document.createElement("a");
       link.href = currentDownload.url;
