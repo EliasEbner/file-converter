@@ -1,0 +1,37 @@
+
+1. The Headline & Tagline:
+
+
+4. Our Mission (The "Big Picture"):
+
+This is your core belief. It makes you sound passionate, not just profit-driven.
+
+Example: "Our mission is to demystify file conversion. We believe everyone should have access to powerful digital tools without the bloat, complexity, or worry. We're committed to providing a straightforward, secure, and efficient service that just works."
+
+5. Meet The Team (The "Who" - This is Key!):
+
+Put a face to the name! Even if it's just you and your friend. Use real photos or friendly, professional avatars.
+
+Write a short, 1-2 sentence bio for each of you. It makes you human and approachable.
+
+Example for you: "[Your Name], co-founder, is the tech wizard who architected the site and ensures the servers never sleep." (Mention AstroJS/FFmpeg here if you want to be technical!)
+
+Example for your friend: "[Friend's Name], co-founder, focuses on user experience and making sure the site is intuitive for everyone, from students to professionals."
+
+6. Our Values & Promise:
+
+This is where you build crucial trust regarding privacy and security.
+
+Speed & Simplicity: We value your time. Our interface is clean and your conversions are quick.
+
+Privacy & Security: This is non-negotiable. We take it seriously. We do not store your files. Your files are processed on-the-fly and deleted from our servers immediately after conversion. We never access, view, or share your content.
+
+Transparency: We're honest about how we operate. We support the site through non-intrusive ads, and we're always clear about what we do.
+
+7. A Call to Action (CTA):
+
+Don't let them leave without a next step!
+
+Example: "Ready to give it a try? Head back to the homepage and convert your first file for free!"
+
+Or: "Have feedback or questions? We'd love to hear from you. Contact us here."

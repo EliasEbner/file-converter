@@ -5,5 +5,45 @@ import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout>
-  <p>something</p>
+  <div class="flex flex-col gap-10 lg:gap-20">
+    <section>
+      <h1 class="text-font text-4xl font-bold">More Than Just File Conversion</h1>
+      <h2 class="text-font-secondary text-xl font-medium">Your trusted, simple, and powerful tool for all your media transformation needs.</h2>
+    </section>
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 grid-flow-row gap-10 sm:gap-12 md:gap-16 lg:gap-20 xl:gap-24 2xl:gap-30 text-justify">
+      <section>
+        <h3 class="text-font text-2xl font-semibold mb-4">Our Story</h3>
+        <p>It all started with a common frustration. We were constantly looking for quick and reliable tools to convert project files for work, school, or our creative hobbies. Every tool we found was either too complicated, hidden behind a paywall, or felt untrustworthy with our data. So, as two developers who love a good challenge, we decided to build it ourselves.</p>
+      </section>
+      <section>
+        <h3 class="text-font text-2xl font-semibold mb-4">What We Do</h3>
+        <p>Mutatio is a free, web-based tool that lets you effortlessly convert between PDFs, images, audio, and video files. Using the powerful FFmpeg engine under the hood, we ensure your conversions are fast, high-quality, and reliable.</p>
+      </section>
+      <section>
+        <h3 class="text-font text-2xl font-semibold mb-4">Our Mission</h3>
+        <p>Our mission is to demystify file conversion. We believe everyone should have access to powerful digital tools without the bloat, complexity, or worry. We're committed to providing a straightforward, secure, and efficient service that just works.</p>
+      </section>
+    </div>
+    <div class="flex flex-row justify-center">
+      <section class="w-2/3 sm:w-1/2 md:w-7/8 lg:w-2/3">
+        <h3 class="text-font text-2xl font-semibold mb-4">Meet The Team</h3>
+        <div class="grid grid-flow-row grid-cols-1 md:grid-cols-2 gap-10 sm:gap-12 md:gap-16 lg:gap-20 xl:gap-24 2xl:gap-30">
+          <div>
+            <div class="flex flex-col gap-2">
+              <img src="/placeholder-headshot.jpg" class="w-full" alt="David Mairhofer - One of the two team members" />
+              <p class="text-font-secondary text-sm">David Mairhofer - FFmpeg implementation</p>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex flex-col gap-2">
+              <img src="/placeholder-headshot.jpg" class="w-full" alt="Elias Walter Ebner - One of the two team members" />
+              <p class="text-font-secondary text-sm">Elias Walter Ebner - Frontend</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+  
 </Layout>
