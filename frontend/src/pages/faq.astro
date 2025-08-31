@@ -4,37 +4,75 @@ import Layout from "../layouts/Layout.astro";
 import Accordion from "../components/Accordion.astro";
 ---
 
-<Layout>
+<Layout title="FAQs">
   <div class="flex flex-col gap-8 lg:gap-16">
     <h1 class="text-4xl font-bold">Frequently Asked Questiens</h1>
-    <section class="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 grid-flow-row gap-4 sm:gap-6 md:gap-8 lg:gap-10 xl:gap-12 2xl:gap-16">
+    <section
+      class="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 grid-flow-row gap-4 sm:gap-6 md:gap-8 lg:gap-10 xl:gap-12 2xl:gap-16"
+    >
       <Accordion title="How does it work?">
         <ol type="1" class="list-inside list-decimal flex flex-col gap-2">
-          <li>Upload a file using the designated area. You can either click on it or drag and drop a file directly on it.</li>
-          <li>Once the file is uploaded, the next step will become enabled, and you will have to select the target filetype from the dropdown menu. Make sure to choose a filetype which makes sense for your input file (i.e. don't try to convert an image to sound or something similar).</li>
-          <li>Once you selected the target filetype, click on the "Convert" button, and a progress bar will appear. Wait for the conversion to finish (for long videos this could take a while, for files like images it should be fairly quick).</li>
-          <li>Once the conversion will have finished, you can click on the download button. This will download the file from the browser.</li>
+          <li>
+            Upload a file using the designated area. You can either click on it
+            or drag and drop a file directly on it.
+          </li>
+          <li>
+            Once the file is uploaded, the next step will become enabled, and
+            you will have to select the target filetype from the dropdown menu.
+            Make sure to choose a filetype which makes sense for your input file
+            (i.e. don't try to convert an image to sound or something similar).
+          </li>
+          <li>
+            Once you selected the target filetype, click on the "Convert"
+            button, and a progress bar will appear. Wait for the conversion to
+            finish (for long videos this could take a while, for files like
+            images it should be fairly quick).
+          </li>
+          <li>
+            Once the conversion will have finished, you can click on the
+            download button. This will download the file from the browser.
+          </li>
         </ol>
       </Accordion>
       <Accordion title="Are my files secure?">
-        Your privacy and security are our top priority. The conversion process happens <strong>100% locally within your own web browser</strong>. This means <strong>your files are never uploded to our servers or any external server</strong>. They stay entirely on your computer, ensuring complete confidentiality.
+        Your privacy and security are our top priority. The conversion process
+        happens <strong>100% locally within your own web browser</strong>. This
+        means <strong
+          >your files are never uploded to our servers or any external server</strong
+        >. They stay entirely on your computer, ensuring complete
+        confidentiality.
       </Accordion>
       <Accordion title="What file formats are supported?">
-        We support a <strong>very wide range of formats</strong>! This includes common image formats (i.e. JPG, PNG, WEBP, GIF), documents (i.e. PDF), and more.
+        We support a <strong>very wide range of formats</strong>! This includes
+        common image formats (i.e. JPG, PNG, WEBP, GIF), documents (i.e. PDF),
+        and more.
       </Accordion>
       <Accordion title="What is the maximum size of files I can convert?">
-        We don't impose any cap on the size of files you can upload. Keep in mind that - because the conversion happens entirely inside of your browser - the limit of files you can convert really depends on your computer's capabilities. <strong>For very large files the site may become unresponsive for a while.</strong>
+        We don't impose any cap on the size of files you can upload. Keep in
+        mind that - because the conversion happens entirely inside of your
+        browser - the limit of files you can convert really depends on your
+        computer's capabilities. <strong
+          >For very large files the site may become unresponsive for a while.</strong
+        >
       </Accordion>
       <Accordion title="Will the quality of my file be affected?">
-        <strong>It depends on the conversion</strong>. Some formats are "<strong>lossless</strong>" while others are "<strong>lossy</strong>". For example, converting a PNG (lossless) to a JPG (lossy) will reduce the file size but may slightly reduce image quality. Converting between similar formats - on the other hand - <strong>will preserve the content perfectly</strong>.
+        <strong>It depends on the conversion</strong>. Some formats are "<strong
+          >lossless</strong
+        >" while others are "<strong>lossy</strong>". For example, converting a
+        PNG (lossless) to a JPG (lossy) will reduce the file size but may
+        slightly reduce image quality. Converting between similar formats - on
+        the other hand - <strong>will preserve the content perfectly</strong>.
       </Accordion>
       <Accordion title="Do I need have to create an account or pay?">
-        <strong>No!</strong> Our tool is completely free to use, and no account or registration is required. Just visit the site and start converting!
+        <strong>No!</strong> Our tool is completely free to use, and no account or
+        registration is required. Just visit the site and start converting!
       </Accordion>
       <Accordion title="I have a suggestion / problem. How can I contact you?">
-        We'd love to hear from you! Please reach out to us with any feedback, bug reports, or feature requests at <strong><a>placeholder@someemail.com</a></strong>.
+        We'd love to hear from you! Please reach out to us with any feedback,
+        bug reports, or feature requests at <strong
+          ><a>placeholder@someemail.com</a></strong
+        >.
       </Accordion>
     </section>
   </div>
-
 </Layout>

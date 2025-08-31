@@ -1,0 +1,24 @@
+---
+import Layout from './Layout.astro';
+
+const { content } = Astro.props;
+---
+
+<Layout title={content.data.title} description={content.data.description}>
+  <article class="blog-post">
+    <header>
+      <h1>{content.data.title}</h1>
+      <p>Published on: {content.data.pubDate.toLocaleDateString()}</p>
+      {content.data.tags && (
+        <div class="tags">
+          Tags: 
+          {content.data.tags.map((tag: string) => (
+            <span class="tag">{tag}</span>
+          ))}
+        </div>
+      )}
+    </header>
+    <hr />
+    <slot />
+  </article>
+</Layout>

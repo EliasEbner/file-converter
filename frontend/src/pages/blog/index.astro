@@ -1,0 +1,44 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import Link from "../../components/Link.astro";
+import Box from "../../components/Box.astro";
+
+const blogPosts = await getCollection("blog", ({ data }) => {
+  return !data.draft; // Filter out drafts
+});
+
+// Sort by publication date, newest first
+const sortedPosts = blogPosts.sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<Layout title="Blog">
+  <div class="flex flex-col gap-8 lg:gap-16">
+    <section>
+      <h1 class="text-font text-4xl font-bold">Blog</h1>
+    </section>
+    <section>
+      <ul
+        class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 grid-flow-row gap-10 sm:gap-12 md:gap-16 lg:gap-20 xl:gap-24 2xl:gap-30"
+      >
+        {
+          sortedPosts.map((post) => (
+            <li>
+              <Link noUnderline href={`/blog/${post.slug}`}>
+                <Box>
+                  <h2 class="inline text-2xl font-semibold">
+                    {post.data.title}
+                  </h2>
+                  <p>{post.data.pubDate.toLocaleDateString()}</p>
+                  <p>{post.data.description}</p>
+                </Box>
+              </Link>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </div>
+</Layout>

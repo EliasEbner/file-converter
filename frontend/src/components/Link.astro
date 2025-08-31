@@ -1,9 +1,15 @@
 ---
-
-const { href } = Astro.props;
-
+const { href, noUnderline } = Astro.props;
 ---
-<a class="hover:text-primary relative duration-200 ease-in-out group cursor-pointer text-font" href={href}>
+
+<a
+  class="hover:text-primary relative duration-200 ease-in-out group cursor-pointer text-font"
+  href={href}
+>
   <slot />
-  <div class="absolute bottom-0 left-0 w-0 group-hover:w-full bg-black h-px group-hover:bg-primary duration-200" />
+  {
+    !noUnderline && (
+      <div class="absolute bottom-0 left-0 w-0 group-hover:w-full bg-black h-px group-hover:bg-primary duration-200" />
+    )
+  }
 </a>
