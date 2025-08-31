@@ -1,0 +1,46 @@
+---
+import Box from "./Box.astro";
+const { title } = Astro.props;
+---
+
+<custom-accordion>
+  <div id="outer-container" class="cursor-pointer">
+    <Box disableAnimation="true">
+      <div id="content-container" class="max-h-12 overflow-hidden duration-200 ease-in-out">
+        <div class="h-12 flex flex-row items-center justify-between text-left p-4 lg:p-0">
+          <h2 class="font-semibold text-base md:text-lg xl:text-xl">
+            {title}
+          </h2>
+          <ion-icon name="chevron-forward-outline" id="chevron-icon" class="text-4xl text-font duration-300 ease-in-out" />
+        </div>
+        <div class="mt-4">
+          <slot />
+        </div>
+      </div>
+    </Box>
+  </div>
+</custom-accordion>
+
+<script>
+  class CustomAccordion extends HTMLElement {
+    connectedCallback() {
+      const contentContainer: HTMLDivElement | null =
+        this.querySelector("#content-container") as HTMLDivElement | null;
+      const outerContainer: HTMLDivElement | null = 
+        this.querySelector("#outer-container") as HTMLDivElement | null;
+      const chevronIcon: HTMLElement | null =
+        this.querySelector("#chevron-icon") as HTMLElement | null;
+
+      function onClickOuterContainer(element: HTMLDivElement) {
+        contentContainer.classList.toggle("max-h-fit");
+        chevronIcon.classList.toggle("rotate-90");
+        contentContainer.classList.toggle("max-h-12");
+        console.log(contentContainer.classList);
+      }
+
+      outerContainer?.addEventListener("click", onClickOuterContainer);
+    }
+  }
+
+  customElements.define('custom-accordion', CustomAccordion);
+</script>

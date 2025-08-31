@@ -1,0 +1,31 @@
+Of course! That's a great feature to highlight. Here is a short list of common FAQ questions and answers tailored for your website.
+
+---
+
+### **Frequently Asked Questions (FAQ)**
+
+**Q1: **
+**A:** Simply upload your file using the "Choose File" button, select your desired output format from the list, and click "Convert". Your new file will be generated and ready to download in just a few moments.
+
+**Q2: Are my files secure? Where are they sent for processing?**
+**A:** Your privacy and security are our top priority. The conversion process happens **100% locally within your own web browser**. This means your files are **never uploaded to our servers or any external server**. They stay entirely on your computer, ensuring complete confidentiality.
+
+**Q3: What file formats do you support?**
+**A:** We support a wide range of formats! This includes common image formats (JPG, PNG, WEBP, GIF), documents (PDF, DOCX, TXT), and more. For a complete and updated list of all supported conversions, please visit our [Supported Formats](/formats) page.
+
+**Q4: Is there a limit to the file size I can convert?**
+**A:** Because the conversion happens on your device, the limit is based on your browser's and computer's memory. Very large files (e.g., videos or high-resolution images over 100MB) might cause the page to become unresponsive. For the best experience, we recommend converting files under 50MB.
+
+**Q5: Why did my conversion fail or the page freeze?**
+**A:** This is usually due to one of two reasons:
+1.  **The file was too large** for your browser to handle in one go. Try with a smaller file if possible.
+2.  **The conversion from your specific input format to your chosen output format isn't fully supported yet.** While we support many formats, some niche conversions may not work. Trying a different, more common format (like converting a PNG to a JPG instead of a TIFF) might solve the issue.
+
+**Q6: Will the quality of my file (image, video, etc.) be affected?**
+**A:** It depends on the conversion. Some formats are "lossless" while others are "lossy". For example, converting a PNG (lossless) to a JPG (lossy) will reduce file size but may slightly reduce image quality. Converting between similar formats, like DOCX to PDF, should preserve the content perfectly.
+
+**Q7: Do I need to create an account or pay to use this service?**
+**A:** No! Our tool is completely free to use, and no account or registration is required. Just visit the site and start converting.
+
+**Q8: I have a suggestion or I’m having a problem. How can I contact you?**
+**A:** We'd love to hear from you! Please reach out to us with any feedback, bug reports, or feature requests at **support@yourwebsite.com** (replace with your email).
