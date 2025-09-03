@@ -128,6 +128,10 @@ const fileExtensions: KeyLabelPair[] = [
     cursor: pointer;
   }
 
+  .text-error {
+    color: #ef4444;
+  }
+
   .button-enabled:hover {
     transform: scale(110%);
   }
@@ -297,63 +301,100 @@ const fileExtensions: KeyLabelPair[] = [
   }
 
   async function convert() {
+    if (convertButton) convertButton.disabled = true; // Disable button to prevent multiple clicks
+
+    // Clear any previous download URL to prevent memory leaks
     if (currentDownload) {
       URL.revokeObjectURL(currentDownload.url);
       currentDownload = null;
-      downloadConvertedFileButton?.parentElement?.classList.add("opacity-30");
+      if (downloadConvertedFileButton) {
+        downloadConvertedFileButton.parentElement?.classList.add("opacity-30");
+        downloadConvertedFileButton.disabled = true;
+      }
     }
+
     const inputFile = fileInput?.files?.[0];
     if (!inputFile) {
       alert("Couldn't read file properly. Please try again.");
+      if (convertButton) convertButton.disabled = false; // Re-enable button if no file
       return;
     }
-    conversionProgressBarContainer?.classList.remove("hidden");
-    conversionProgressBarContainer?.classList.add("flex");
-    if (conversionProgressBarLabel) {
+
+    // Reset and show the progress bar for the new conversion
+    if (
+      conversionProgressBarContainer &&
+      conversionProgressBar &&
+      conversionProgressBarLabel
+    ) {
+      conversionProgressBarContainer.classList.remove("hidden");
+      conversionProgressBarContainer.classList.add("flex");
       conversionProgressBarLabel.innerText = "0%";
+      conversionProgressBar.value = 0;
+      // TODO: elias's styling magic
+      // conversionProgressBarLabel.classList.remove("red-500");
     }
 
-    const ffmpeg_inst = await getFFmpeg();
+    try {
+      const ffmpeg_inst = await getFFmpeg();
 
-    ffmpeg_inst.on("log", ({ type, message }) => {
-      console.log(`[${type}] ${message}`);
-    });
-    ffmpeg_inst.on("progress", ({ progress, time }) => {
-      if (conversionProgressBar && conversionProgressBarLabel) {
-        conversionProgressBar.value = progress * 100;
+      ffmpeg_inst.on("log", ({ type, message }) => {
+        console.log(`[${type}] ${message}`);
+      });
+      ffmpeg_inst.on("progress", ({ progress, time }) => {
+        if (conversionProgressBar && conversionProgressBarLabel) {
+          const progressPercent = Math.round(progress * 100);
+          conversionProgressBar.value = progressPercent;
+          conversionProgressBarLabel.innerText = `${progressPercent}%`;
+        }
+      });
+
+      const newType = extensionSelect?.value;
+      const outFileName = inputFile.name.replace(/\.[^/.]+$/, `.${newType}`);
+
+      console.log(
+        "Starting conversion to " + newType + " (" + outFileName + ")",
+      );
+      await ffmpeg_inst.writeFile(inputFile.name, await fetchFile(inputFile));
+
+      await ffmpeg_inst.exec(["-i", inputFile.name, outFileName]);
+
+      const data = await ffmpeg_inst.readFile(outFileName);
+      ffmpeg_inst.deleteFile(inputFile.name);
+      ffmpeg_inst.deleteFile(outFileName);
+      console.log("Conversion completed.");
+
+      conversionProgressBarContainer?.classList.remove("flex");
+      conversionProgressBarContainer?.classList.add("hidden");
+
+      if (downloadConvertedFileButton && secondChevron) {
+        downloadConvertedFileButton.disabled = false;
+        for (const chevron of secondChevron) {
+          chevron.classList.remove("text-font-secondary");
+        }
+      }
+
+      currentDownload = {
+        name: outFileName,
+        url: URL.createObjectURL(new Blob([data.buffer])),
+      };
+      downloadConvertedFileButton?.parentElement?.classList.remove(
+        "opacity-30",
+      );
+    } catch (error) {
+      console.error("An error occurred during conversion:", error);
+      if (conversionProgressBarLabel) {
         conversionProgressBarLabel.innerText =
-          (progress * 100).toFixed(0).toString() + "%";
+          "Conversion failed. Unsupported format or file error.";
+        // TODO: elias's styling magic
+        // conversionProgressBarLabel.classList.add("red-500");
       }
-    });
-    const newType = extensionSelect?.value;
-    const outFileName = inputFile.name.replace(/\.[^/.]+$/, `.${newType}`);
-
-    console.log("Starting conversion to " + newType + "(" + outFileName + ")");
-
-    await ffmpeg_inst.writeFile(inputFile.name, await fetchFile(inputFile));
-
-    // TODO: error handling like 'unsupported conversion'
-    await ffmpeg_inst.exec(["-i", inputFile.name, outFileName]);
-
-    const data = await ffmpeg?.readFile(outFileName);
-
-    console.log("Conversion completed.");
-
-    conversionProgressBarContainer?.classList.remove("flex");
-    conversionProgressBarContainer?.classList.add("hidden");
-    if (downloadConvertedFileButton && secondChevron) {
-      downloadConvertedFileButton.disabled = false;
-      for (const chevron of secondChevron) {
-        chevron.classList.remove("text-font-secondary");
-      }
+      // should the progress bar remain visible when showing the error message?
+    } finally {
+      // Re-enable the convert button so the user can try again.
+      if (convertButton) convertButton.disabled = false;
     }
-
-    currentDownload = {
-      name: outFileName,
-      url: URL.createObjectURL(new Blob([data?.buffer])),
-    }; // for better browser support: ', { type: "image/png" }'
-    downloadConvertedFileButton?.parentElement?.classList.remove("opacity-30");
   }
+
   convertButton?.addEventListener("click", convert);
 
   downloadConvertedFileButton?.addEventListener("click", () => {
@@ -366,5 +407,6 @@ const fileExtensions: KeyLabelPair[] = [
       document.body.removeChild(link);
     }
   });
+
   fileInputChangeHandler(null);
 </script>
