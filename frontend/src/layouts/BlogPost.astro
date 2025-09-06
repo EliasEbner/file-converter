@@ -1,6 +1,7 @@
 ---
 import Box from "../components/Box.astro";
 import Layout from "./Layout.astro";
+import { Image } from "astro:assets";
 
 const { content } = Astro.props;
 ---
@@ -15,10 +16,25 @@ const { content } = Astro.props;
           class="prose prose-sm md:prose-md lg:prose-lg xl:prose-xl max-w-none text-justify"
         >
           <header>
-            <h1>{content.data.title}</h1>
+            <h1 class="xl:text-left max-h-min overflow-hidden">
+              {content.data.title}
+            </h1>
             <p class="text-font-secondary font-bold">
               {content.data.description}
             </p>
+            {
+              content.data.image && content.data.imageAlt && (
+                <div class="flex justify-center">
+                  <Image
+                    src={content.data.image}
+                    alt={content.data.imageAlt}
+                    format="webp"
+                    loading="lazy"
+                    class="rounded-lg w-full lg:w-4/5 xl:w-3/4 2xl:w-2/3 object-cover aspect-video mt-0!"
+                  />
+                </div>
+              )
+            }
             <p>
               Published on: <b>{content.data.pubDate.toLocaleDateString()}</b>
             </p>
