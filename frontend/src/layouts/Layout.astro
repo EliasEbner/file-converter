@@ -29,7 +29,9 @@ const { title, description } = Astro.props;
   </head>
   <body>
     <Header />
-    <div class="p-6 sm:p-8 md:p-10 lg:p-12 w-full h-[calc(100vh-5rem)]">
+    <div
+      class="p-6 sm:p-8 md:p-10 lg:p-12 w-full h-[calc(100vh-5rem)] overflow-y-scroll bg-gradient-to-b from-font-light to-primary-light-transparent"
+    >
       <slot />
     </div>
     <script

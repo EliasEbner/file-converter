@@ -1,24 +1,42 @@
 ---
-import Layout from './Layout.astro';
+import Box from "../components/Box.astro";
+import Layout from "./Layout.astro";
 
 const { content } = Astro.props;
 ---
 
 <Layout title={content.data.title} description={content.data.description}>
-  <article class="blog-post">
-    <header>
-      <h1>{content.data.title}</h1>
-      <p>Published on: {content.data.pubDate.toLocaleDateString()}</p>
-      {content.data.tags && (
-        <div class="tags">
-          Tags: 
-          {content.data.tags.map((tag: string) => (
-            <span class="tag">{tag}</span>
-          ))}
-        </div>
-      )}
-    </header>
-    <hr />
-    <slot />
-  </article>
+  <div class="w-full flex justify-center">
+    <div
+      class="xl:max-w-4/5 2xl:max-w-3/4 self-center ease-in-out duration-300"
+    >
+      <Box disableAnimation>
+        <article
+          class="prose prose-sm md:prose-md lg:prose-lg xl:prose-xl max-w-none text-justify"
+        >
+          <header>
+            <h1>{content.data.title}</h1>
+            <p class="text-font-secondary font-bold">
+              {content.data.description}
+            </p>
+            <p>
+              Published on: <b>{content.data.pubDate.toLocaleDateString()}</b>
+            </p>
+            {
+              content.data.tags && (
+                <div class="tags">
+                  Tags:
+                  {content.data.tags.map((tag: string) => (
+                    <span class="tag">{tag}</span>
+                  ))}
+                </div>
+              )
+            }
+          </header>
+          <hr />
+          <slot />
+        </article>
+      </Box>
+    </div>
+  </div>
 </Layout>

@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import Link from "../../components/Link.astro";
 import Box from "../../components/Box.astro";
+import { Image } from "astro:assets";
 
 const blogPosts = await getCollection("blog", ({ data }) => {
   return !data.draft; // Filter out drafts
@@ -28,11 +29,27 @@ const sortedPosts = blogPosts.sort(
             <li>
               <Link noUnderline href={`/blog/${post.slug}`}>
                 <Box>
-                  <h2 class="inline text-2xl font-semibold">
-                    {post.data.title}
-                  </h2>
-                  <p>{post.data.pubDate.toLocaleDateString()}</p>
-                  <p>{post.data.description}</p>
+                  <div class="flex flex-col gap-4">
+                    {post.data.image && post.data.imageAlt && (
+                      <Image
+                        src={post.data.image}
+                        layout="full-width"
+                        alt={post.data.imageAlt}
+                        format="webp"
+                        loading="lazy"
+                        class="rounded-lg"
+                      />
+                    )}
+                    <h2 class="text-2xl font-semibold line-clamp-2">
+                      {post.data.title}
+                    </h2>
+                    <p class="text-font-secondary line-clamp-3 font-medium">
+                      {post.data.description}
+                    </p>
+                    <p class="text-font-secondary text-sm">
+                      {post.data.pubDate.toLocaleDateString()}
+                    </p>
+                  </div>
                 </Box>
               </Link>
             </li>
