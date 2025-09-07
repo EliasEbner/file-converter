@@ -278,7 +278,10 @@ const fileExtensions: KeyLabelPair[] = [
       return ffmpeg;
     }
     console.log("Loading ffmpeg-core.js");
-
+    if (conversionProgressBarLabel) {
+      conversionProgressBarLabel.innerText =
+        "Loading FFmpeg (only on first conversion)";
+    }
     ffmpeg = new FFmpeg();
     if (!ffmpeg.loaded) {
       try {
@@ -295,7 +298,14 @@ const fileExtensions: KeyLabelPair[] = [
         });
       } catch (error) {
         console.error("Error loading FFmpeg:", error);
+        if (conversionProgressBarLabel) {
+          conversionProgressBarLabel.innerText =
+            "Loading FFmpeg (only on first conversion)";
+        }
         throw new Error("Failed to load FFmpeg");
+      }
+      if (conversionProgressBarLabel) {
+        conversionProgressBarLabel.innerText = "0%";
       }
     }
     return ffmpeg;
